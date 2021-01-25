@@ -1,12 +1,12 @@
-package com.grperets.webshopv2.product.service;
+package com.grperets.webshopv2.service;
 
-import com.grperets.webshopv2.product.model.Product;
+import com.grperets.webshopv2.model.Product;
 
 import java.util.List;
 
 public interface ProductService {
     Product getById(Long id);
     void save(Product product);
-    void delete(Long id);
+    void delete(Product product);
     List<Product> getAll();
 }

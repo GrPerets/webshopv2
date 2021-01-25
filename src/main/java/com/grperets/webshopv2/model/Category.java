@@ -1,4 +1,4 @@
-package com.grperets.webshopv2.product.model;
+package com.grperets.webshopv2.model;
 
 import lombok.Data;
 
@@ -8,7 +8,7 @@ import java.util.List;
 @Entity
 @Table(name = "categories")
 @Data
-public class Category extends BaseEntity{
+public class Category extends BaseEntity {
 
     @Column(name = "categoryname")
     public String categoryname;

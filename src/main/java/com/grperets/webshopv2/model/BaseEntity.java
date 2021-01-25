@@ -1,4 +1,4 @@
-package com.grperets.webshopv2.product.model;
+package com.grperets.webshopv2.model;
 
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
@@ -16,11 +16,11 @@ public class BaseEntity {
     private Long id;
 
     @CreatedDate
-    @Column(name = "created_at")
+    @Column(name = "created")
     private Date created;
 
     @LastModifiedDate
-    @Column(name = "updated_at")
+    @Column(name = "updated")
     private Date updated;
 
     @Enumerated(EnumType.STRING)

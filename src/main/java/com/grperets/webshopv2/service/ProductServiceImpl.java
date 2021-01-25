@@ -1,10 +1,12 @@
-package com.grperets.webshopv2.product.service;
+package com.grperets.webshopv2.service;
 
-import com.grperets.webshopv2.product.model.Product;
-import com.grperets.webshopv2.product.repository.ProductRepository;
+import com.grperets.webshopv2.model.Product;
+import com.grperets.webshopv2.model.Status;
+import com.grperets.webshopv2.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -20,18 +22,21 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public Product getById(Long id) {
-        return productRepository.getOne(id);
+        return productRepository.findById(id).orElse(null);
     }
 
     @Override
     public void save(Product product) {
+        product.setStatus(Status.NOT_AVAILABLE);
+        product.setCreated(new Date());
+        product.setUpdated(new Date());
         productRepository.save(product);
 
     }
 
     @Override
-    public void delete(Long id) {
-        productRepository.deleteById(id);
+    public void delete(Product product) {
+        productRepository.delete(product);
 
     }
 

@@ -1,12 +1,11 @@
 package com.grperets.webshopv2.controller;
 
-import com.grperets.webshopv2.product.model.Product;
-import com.grperets.webshopv2.product.service.ProductService;
+import com.grperets.webshopv2.model.Product;
+import com.grperets.webshopv2.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+
 import javax.validation.Valid;
 import java.util.List;
 
@@ -15,7 +14,7 @@ import java.util.List;
 @RequestMapping("/api/v1/products")
 public class ProductRestControllerV1 {
 
-    public final ProductService productService;
+    private final ProductService productService;
 
     @Autowired
     public ProductRestControllerV1(ProductService productService) {
@@ -24,7 +23,7 @@ public class ProductRestControllerV1 {
 
     @RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Product> getProduct(@PathVariable("id") Long id){
-        if (id==null) {
+        if (id == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         Product product = this.productService.getById(id);
@@ -63,16 +62,17 @@ public class ProductRestControllerV1 {
         if (product == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        this.productService.delete(id);
+        this.productService.delete(product);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Product>> getAllProducts(){
+
         List<Product> products = this.productService.getAll();
         if (products.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<>(products, HttpStatus.OK);

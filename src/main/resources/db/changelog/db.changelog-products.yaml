@@ -1,5 +1,5 @@
 databaseChangeLog:
-  - logicalFilePath: db/changelog/db.changelog-product.yaml
+  - logicalFilePath: db/changelog/db.changelog-products.yaml
   - changeSet:
       id: 1
       author: hryhorii perets
@@ -16,7 +16,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: productname
-                  type: varchar(50)
+                  type: varchar(100)
                   constraints:
                     unique: true
                     nullable: false
@@ -29,13 +29,13 @@ databaseChangeLog:
                   name: price
                   type: DECIMAL
               - column:
-                  name: created_at
+                  name: created
                   type: TIMESTAMP
                   defaultValue: CURRENT_TIMESTAMP()
                   constraints:
                     nullable: true
               - column:
-                  name: updated_at
+                  name: updated
                   type: TIMESTAMP
                   defaultValue: CURRENT_TIMESTAMP()
                   constraints:
@@ -67,13 +67,13 @@ databaseChangeLog:
 
 
               - column:
-                  name: created_at
+                  name: created
                   type: TIMESTAMP
                   defaultValue: CURRENT_TIMESTAMP()
                   constraints:
                     nullable: true
               - column:
-                  name: updated_at
+                  name: updated
                   type: TIMESTAMP
                   defaultValue: CURRENT_TIMESTAMP()
                   constraints:
