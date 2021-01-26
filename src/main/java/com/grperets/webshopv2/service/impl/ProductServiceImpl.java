@@ -1,8 +1,9 @@
-package com.grperets.webshopv2.service;
+package com.grperets.webshopv2.service.impl;
 
 import com.grperets.webshopv2.model.Product;
 import com.grperets.webshopv2.model.Status;
 import com.grperets.webshopv2.repository.ProductRepository;
+import com.grperets.webshopv2.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class ProductServiceImpl implements ProductService{
+public class ProductServiceImpl implements ProductService {
 
     public final ProductRepository productRepository;
 

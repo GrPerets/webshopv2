@@ -127,10 +127,13 @@ databaseChangeLog:
             baseColumnNames: manager_id
             baseTableName: managers_roles
             constraintName: fk_managers_roles_manager
-            deferrable: false
-            initiallyDeferred: false
+            deferrable:  false
+            initiallyDeferred:  false
+            onDelete:  CASCADE
+            onUpdate:  RESTRICT
             referencedColumnNames: id
             referencedTableName: managers
+            validate:  true
   - changeSet:
       id: 5
       author: hryhorii perets
@@ -139,10 +142,13 @@ databaseChangeLog:
             baseColumnNames: role_id
             baseTableName: managers_roles
             constraintName: fk_managers_roles_role
-            deferrable: false
-            initiallyDeferred: false
+            deferrable:  false
+            initiallyDeferred:  false
+            onDelete:  CASCADE
+            onUpdate:  RESTRICT
             referencedColumnNames: id
             referencedTableName: roles
+            validate:  true
   - changeSet:
       id: 6
       author: hryhorii perets

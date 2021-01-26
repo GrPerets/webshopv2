@@ -28,7 +28,7 @@ public class Manager extends BaseEntity{
     @Column(name = "phone")
     private String phone;
 
-    @ManyToMany(fetch = FetchType.EAGER )
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "managers_roles",
             joinColumns = {@JoinColumn(name = "manager_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
