@@ -57,6 +57,9 @@ public class ManagerRestControllerV1 {
     }
     @RequestMapping(value = ("{id}"), method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Manager> deleteManager(@PathVariable("id") Long id){
+        if(id == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         Manager manager = this.managerService.getById(id);
         if (manager == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

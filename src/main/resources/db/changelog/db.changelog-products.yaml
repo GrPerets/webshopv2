@@ -21,11 +21,6 @@ databaseChangeLog:
                     unique: true
                     nullable: false
               - column:
-                  name: category
-                  type: varchar(50)
-                  constraints:
-                    nullable: true
-              - column:
                   name: price
                   type: DECIMAL
               - column:
@@ -64,8 +59,6 @@ databaseChangeLog:
                   constraints:
                     unique: true
                     nullable: false
-
-
               - column:
                   name: created
                   type: TIMESTAMP
@@ -82,4 +75,50 @@ databaseChangeLog:
                   name: status
                   type: varchar(50)
                   defaultValue: NOT_AVAILABLE
-
+  - changeSet:
+      id: 3
+      author: hryhorii perets
+      changes:
+        - createTable:
+            tableName: products_category
+            columns:
+              - column:
+                  name: product_id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: category_id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+  - changeSet:
+      id: 4
+      author: hryhorii perets
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: product_id
+            baseTableName: products_category
+            constraintName: fk_products_category_product
+            deferrable:  false
+            initiallyDeferred:  false
+            onDelete:  CASCADE
+            onUpdate:  RESTRICT
+            referencedColumnNames: id
+            referencedTableName: products
+            validate:  true
+  - changeSet:
+      id: 5
+      author: hryhorii perets
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: category_id
+            baseTableName: products_category
+            constraintName: fk_products_category_category
+            deferrable:  false
+            initiallyDeferred:  false
+            onDelete:  CASCADE
+            onUpdate:  RESTRICT
+            referencedColumnNames: id
+            referencedTableName: categories
+            validate:  true

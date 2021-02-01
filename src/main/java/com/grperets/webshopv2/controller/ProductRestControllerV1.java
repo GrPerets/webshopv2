@@ -1,5 +1,6 @@
 package com.grperets.webshopv2.controller;
 
+import com.grperets.webshopv2.dto.ProductDTO;
 import com.grperets.webshopv2.model.Product;
 import com.grperets.webshopv2.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -22,7 +24,7 @@ public class ProductRestControllerV1 {
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Product> getProduct(@PathVariable("id") Long id){
+    public ResponseEntity<ProductDTO> getProduct(@PathVariable("id") Long id){
         if (id == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -30,34 +32,38 @@ public class ProductRestControllerV1 {
         if (product == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(product, HttpStatus.OK);
+        ProductDTO productDTO = ProductDTO.fromProduct(product);
+        return new ResponseEntity<>(productDTO, HttpStatus.OK);
 
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Product> saveProduct(@RequestBody @Valid Product product){
-        if (product == null) {
+    public ResponseEntity<ProductDTO> saveProduct(@RequestBody @Valid ProductDTO productDTO){
+        if (productDTO == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        Product product = productDTO.toProduct();
+
         this.productService.save(product);
 
-        return new ResponseEntity<>(product, HttpStatus.CREATED);
+        return new ResponseEntity<>(productDTO, HttpStatus.CREATED);
 
     }
 
     @RequestMapping(value = "", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Product> updateProduct(@RequestBody @Valid Product product){
-        if(product == null) {
+    public ResponseEntity<ProductDTO> updateProduct(@RequestBody @Valid ProductDTO productDTO){
+        if(productDTO == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        Product product = productDTO.toProduct();
         this.productService.save(product);
-        return new ResponseEntity<>(product, HttpStatus.OK);
+        return new ResponseEntity<>(productDTO, HttpStatus.OK);
 
 
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Product> deleteProduct(@PathVariable("id") Long id){
+    public ResponseEntity<ProductDTO> deleteProduct(@PathVariable("id") Long id){
         Product product = this.productService.getById(id);
         if (product == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -68,14 +74,18 @@ public class ProductRestControllerV1 {
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Product>> getAllProducts(){
+    public ResponseEntity<List<ProductDTO>> getAllProducts(){
 
         List<Product> products = this.productService.getAll();
         if (products.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        List<ProductDTO> productDTOS = new ArrayList<>();
+        for (Product product: products){
+            productDTOS.add(ProductDTO.fromProduct(product));
+        }
 
-        return new ResponseEntity<>(products, HttpStatus.OK);
+        return new ResponseEntity<>(productDTOS, HttpStatus.OK);
 
     }
 }

@@ -11,11 +11,14 @@ import java.math.BigDecimal;
 public class Product extends BaseEntity {
 
     @Column(name = "productname")
-    private String pruductname;
+    private String productname;
 
-
-    @Column(name = "category")
-    private String category;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinTable(name = "products_category",
+            joinColumns = {@JoinColumn(name = "product_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "category_id", referencedColumnName = "id")})
+    //@JoinColumn(name = "category_id")
+    private Category category;
 
     @Column(name = "price")
     private BigDecimal price;
