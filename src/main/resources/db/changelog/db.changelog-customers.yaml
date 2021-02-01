@@ -1,0 +1,115 @@
+databaseChangeLog:
+  - logicalFilePath: db/changelog/db.changelog-customers.yaml
+  - changeSet:
+      id: 1
+      author: hryhorii perets
+      changes:
+        - createTable:
+            tableName: customers
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: customername
+                  type: varchar(100)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: first_name
+                  type: varchar(100)
+                  constraints:
+                    unique: fals
+                    nullable: false
+              - column:
+                  name: last_name
+                  type: varchar(100)
+                  constraints:
+                    unique: false
+                    nullable: false
+              - column:
+                  name: password
+                  type: varchar(256)
+                  constraints:
+                    unique: false
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(256)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: phone
+                  type: varchar(100)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: created
+                  type: TIMESTAMP
+                  defaultValue: CURRENT_TIMESTAMP()
+                  constraints:
+                    nullable: true
+              - column:
+                  name: updated
+                  type: TIMESTAMP
+                  defaultValue: CURRENT_TIMESTAMP()
+                  constraints:
+                    nullable: true
+              - column:
+                  name: status
+                  type: varchar(50)
+                  defaultValue: NOT_ACTIVE
+  - changeSet:
+      id: 2
+      author: hryhorii perets
+      changes:
+        - createTable:
+            tableName: customers_roles
+            columns:
+              - column:
+                  name: customer_id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: role_id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+  - changeSet:
+      id: 3
+      author: hryhorii perets
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: customer_id
+            baseTableName: customers_roles
+            constraintName: fk_customers_roles_customer
+            deferrable:  false
+            initiallyDeferred:  false
+            onDelete:  CASCADE
+            onUpdate:  RESTRICT
+            referencedColumnNames: id
+            referencedTableName: customers
+            validate:  true
+  - changeSet:
+      id: 4
+      author: hryhorii perets
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: role_id
+            baseTableName: customers_roles
+            constraintName: fk_customers_roles_role
+            deferrable:  false
+            initiallyDeferred:  false
+            onDelete:  CASCADE
+            onUpdate:  RESTRICT
+            referencedColumnNames: id
+            referencedTableName: roles
+            validate:  true

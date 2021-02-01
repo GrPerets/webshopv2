@@ -13,6 +13,6 @@ public class Category extends BaseEntity {
     @Column(name = "categoryname")
     public String categoryname;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     public List<Product> products;
 }
