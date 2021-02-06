@@ -38,20 +38,20 @@ public class ManagerRestControllerV1 {
                 ResponseEntity<>(managerDTO, HttpStatus.OK);
     }
     @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ManagerDTO> saveManager(@RequestBody ManagerDTO managerDTO){
+    public ResponseEntity<ManagerDTO> createManager(@RequestBody ManagerDTO managerDTO){
         if(managerDTO == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        this.managerService.save(managerDTO.toManager());
+        this.managerService.create(managerDTO.toManager());
         return new ResponseEntity<>(managerDTO, HttpStatus.CREATED);
 
     }
-    @RequestMapping(value = "", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ManagerDTO> updateManager(@RequestBody ManagerDTO managerDTO){
+    @RequestMapping(value = "{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ManagerDTO> updateManager(@PathVariable("id") Long id, @RequestBody ManagerDTO managerDTO){
         if (managerDTO == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        this.managerService.save(managerDTO.toManager());
+        this.managerService.update(managerDTO.toManager());
         return new ResponseEntity<>(managerDTO, HttpStatus.OK);
 
     }
@@ -69,7 +69,7 @@ public class ManagerRestControllerV1 {
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<ManagerDTO>> getAllManager(){
+    public ResponseEntity<List<ManagerDTO>> getAllManagers(){
         List<Manager> managers = this.managerService.getAll();
 
         if (managers.isEmpty()) {

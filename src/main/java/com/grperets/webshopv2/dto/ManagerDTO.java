@@ -3,11 +3,11 @@ package com.grperets.webshopv2.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.grperets.webshopv2.model.Manager;
 import com.grperets.webshopv2.model.Role;
-import com.grperets.webshopv2.model.Roles;
 import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -43,10 +43,7 @@ public class ManagerDTO {
         managerDTO.setPassword(manager.getPassword());
         managerDTO.setEmail(manager.getEmail());
         managerDTO.setPhone(manager.getPhone());
-        List<RoleDTO> roleDTOS = new ArrayList<>();
-        for (Role role:manager.getRoles()){
-            roleDTOS.add(RoleDTO.fromRole(role));
-        };
+        List<RoleDTO> roleDTOS = manager.getRoles().stream().map(role -> RoleDTO.fromRole(role)).collect(Collectors.toList());
         managerDTO.setRoles(roleDTOS);
 
         return managerDTO;

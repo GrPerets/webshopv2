@@ -8,6 +8,7 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -43,10 +44,7 @@ public class CustomerDTO {
         customerDTO.setPassword(customer.getPassword());
         customerDTO.setEmail(customer.getEmail());
         customerDTO.setPhone(customer.getPhone());
-        List<RoleDTO> roleDTOS = new ArrayList<>();
-        for (Role role:customer.getRoles()){
-            roleDTOS.add(RoleDTO.fromRole(role));
-        };
+        List<RoleDTO> roleDTOS = customer.getRoles().stream().map(role ->RoleDTO.fromRole(role)).collect(Collectors.toList());
         customerDTO.setRoles(roleDTOS);
 
         return customerDTO;

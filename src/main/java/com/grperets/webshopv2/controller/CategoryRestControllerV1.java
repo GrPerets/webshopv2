@@ -9,7 +9,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,12 +37,12 @@ public class CategoryRestControllerV1 {
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CategoryDTO> saveCategory(@RequestBody CategoryDTO categoryDTO){
+    public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO categoryDTO){
         if (categoryDTO == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        this.categoryService.save(categoryDTO.toCategory());
+        this.categoryService.create(categoryDTO.toCategory());
         return new ResponseEntity<>(categoryDTO, HttpStatus.CREATED);
     }
 
@@ -52,7 +51,7 @@ public class CategoryRestControllerV1 {
         if(categoryDTO == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        this.categoryService.save(categoryDTO.toCategory());
+        this.categoryService.update(categoryDTO.toCategory());
         return new ResponseEntity<>(categoryDTO, HttpStatus.OK);
     }
 

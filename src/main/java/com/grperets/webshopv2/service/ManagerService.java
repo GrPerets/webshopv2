@@ -6,7 +6,8 @@ import java.util.List;
 
 public interface ManagerService {
     Manager getById(Long id);
-    void save(Manager manager);
+    void create(Manager manager);
+    void update(Manager manager);
     void delete(Manager manager);
     List<Manager> getAll();
 }

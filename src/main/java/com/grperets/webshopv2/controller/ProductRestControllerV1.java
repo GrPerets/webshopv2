@@ -38,13 +38,13 @@ public class ProductRestControllerV1 {
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ProductDTO> saveProduct(@RequestBody @Valid ProductDTO productDTO){
+    public ResponseEntity<ProductDTO> createProduct(@RequestBody @Valid ProductDTO productDTO){
         if (productDTO == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         Product product = productDTO.toProduct();
 
-        this.productService.save(product);
+        this.productService.create(product);
 
         return new ResponseEntity<>(productDTO, HttpStatus.CREATED);
 
@@ -56,7 +56,7 @@ public class ProductRestControllerV1 {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         Product product = productDTO.toProduct();
-        this.productService.save(product);
+        this.productService.update(product);
         return new ResponseEntity<>(productDTO, HttpStatus.OK);
 
 

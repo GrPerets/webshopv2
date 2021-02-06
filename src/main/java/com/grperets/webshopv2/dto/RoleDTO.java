@@ -2,14 +2,13 @@ package com.grperets.webshopv2.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.grperets.webshopv2.model.Role;
-import com.grperets.webshopv2.model.Roles;
 import lombok.Data;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RoleDTO {
 
-    private Roles rolename;
+    private String rolename;
 
     public Role toRole(){
         Role role = new Role();

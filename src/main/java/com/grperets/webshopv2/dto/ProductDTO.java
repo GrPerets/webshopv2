@@ -11,15 +11,13 @@ import java.math.BigDecimal;
 public class ProductDTO {
     private Long id;
     private String productname;
-    private String category;
+    private Category category;
     private BigDecimal price;
 
     public Product toProduct(){
         Product product = new Product();
         product.setId(this.id);
         product.setProductname(this.productname);
-        Category category = new Category();
-        category.setCategoryname(this.category);
         product.setCategory(category);
         product.setPrice(this.price);
         return product;
@@ -29,7 +27,7 @@ public class ProductDTO {
         ProductDTO productDTO = new ProductDTO();
         productDTO.setId(product.getId());
         productDTO.setProductname(product.getProductname());
-        productDTO.setCategory(product.getCategory().categoryname);
+        productDTO.setCategory(product.getCategory());
         productDTO.setPrice(product.getPrice());
         return productDTO;
     }

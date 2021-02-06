@@ -36,12 +36,12 @@ public class CustomerRestControllerV1 {
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CustomerDTO> saveCustomer(@RequestBody CustomerDTO customerDTO){
+    public ResponseEntity<CustomerDTO> createCustomer(@RequestBody CustomerDTO customerDTO){
         if( customerDTO == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         Customer customer = customerDTO.toCustomer();
-        this.customerService.save(customer);
+        this.customerService.create(customer);
         return new ResponseEntity<>(customerDTO, HttpStatus.CREATED);
     }
 
@@ -51,7 +51,7 @@ public class CustomerRestControllerV1 {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         Customer customer = customerDTO.toCustomer();
-        this.customerService.save(customer);
+        this.customerService.update(customer);
         return new ResponseEntity<>(customerDTO, HttpStatus.OK);
     }
 

@@ -7,6 +7,8 @@ import com.grperets.webshopv2.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -23,26 +25,38 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product getById(Long id) {
-        return productRepository.findById(id).orElse(null);
+        return this.productRepository.findById(id).orElse(null);
     }
 
     @Override
-    public void save(Product product) {
+    public void create(Product product) {
         product.setStatus(Status.NOT_AVAILABLE);
-        product.setCreated(new Date());
-        product.setUpdated(new Date());
-        productRepository.save(product);
+        product.setCreated(Timestamp.valueOf(LocalDateTime.now()));
+
+        this.productRepository.save(product);
+
+    }
+
+    @Override
+    public void update(Product product){
+        Product existingProduct = this.productRepository.findById(product.getId()).orElse(new Product());
+        //existingProduct.setId(product.getId());
+        existingProduct.setProductname(product.getProductname());
+        existingProduct.setCategory(product.getCategory());
+        existingProduct.setPrice(product.getPrice());
+        existingProduct.setUpdated(Timestamp.valueOf(LocalDateTime.now()));
+        this.productRepository.save(existingProduct);
 
     }
 
     @Override
     public void delete(Product product) {
-        productRepository.delete(product);
+        this.productRepository.delete(product);
 
     }
 
     @Override
     public List<Product> getAll() {
-        return productRepository.findAll();
+        return this.productRepository.findAll();
     }
 }
