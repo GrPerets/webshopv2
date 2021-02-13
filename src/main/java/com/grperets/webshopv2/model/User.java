@@ -5,14 +5,13 @@ import lombok.Data;
 import javax.persistence.*;
 import java.util.List;
 
-
 @Entity
-@Table(name = "customers")
+@Table(name = "users")
 @Data
-public class Customer extends BaseEntity {
+public class User extends BaseEntity{
 
-    @Column(name = "customername")
-    private String customername;
+    @Column(name = "username")
+    private String username;
 
     @Column(name = "first_name")
     private String firstName;
@@ -29,10 +28,10 @@ public class Customer extends BaseEntity {
     @Column(name = "phone")
     private String phone;
 
+
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "customers_roles",
-            joinColumns = {@JoinColumn(name = "customer_id", referencedColumnName = "id")},
+    @JoinTable(name = "users_roles",
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     private List<Role> roles;
-
 }
