@@ -1,11 +1,11 @@
 databaseChangeLog:
-  - logicalFilePath: db/changelog/db.changelog-users.yaml
+  - logicalFilePath: db/changelog/db.changelog-customers.yaml
   - changeSet:
       id: 1
       author: hryhorii perets
       changes:
         - createTable:
-            tableName: users
+            tableName: customers
             columns:
               - column:
                   name: id
@@ -71,47 +71,10 @@ databaseChangeLog:
       author: hryhorii perets
       changes:
         - createTable:
-            tableName: roles
+            tableName: customers_roles
             columns:
               - column:
-                  name: id
-                  type: BIGINT
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: rolename
-                  type: varchar(25)
-                  defaultValue: ROLE_USER
-                  constraints:
-                    unique: true
-                    nullable: false
-              - column:
-                  name: created
-                  type: TIMESTAMP
-                  defaultValue: CURRENT_TIMESTAMP()
-                  constraints:
-                    nullable: true
-              - column:
-                  name: updated
-                  type: TIMESTAMP
-                  defaultValue: CURRENT_TIMESTAMP()
-                  constraints:
-                    nullable: true
-              - column:
-                  name: status
-                  type: varchar(25)
-                  defaultValue: ACTIVE
-  - changeSet:
-      id: 3
-      author: hryhorii perets
-      changes:
-        - createTable:
-            tableName: users_roles
-            columns:
-              - column:
-                  name: user_id
+                  name: customer_id
                   type: BIGINT
                   constraints:
                     primaryKey: true
@@ -121,28 +84,28 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
   - changeSet:
-      id: 4
+      id: 3
       author: hryhorii perets
       changes:
         - addForeignKeyConstraint:
-            baseColumnNames: user_id
-            baseTableName: users_roles
-            constraintName: fk_users_roles_user
+            baseColumnNames: customer_id
+            baseTableName: customers_roles
+            constraintName: fk_customers_roles_customer
             deferrable:  false
             initiallyDeferred:  false
             onDelete:  CASCADE
             onUpdate:  RESTRICT
             referencedColumnNames: id
-            referencedTableName: users
+            referencedTableName: customers
             validate:  true
   - changeSet:
-      id: 5
+      id: 4
       author: hryhorii perets
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: role_id
-            baseTableName: users_roles
-            constraintName: fk_users_roles_role
+            baseTableName: customers_roles
+            constraintName: fk_customers_roles_role
             deferrable:  false
             initiallyDeferred:  false
             onDelete:  CASCADE
@@ -150,32 +113,3 @@ databaseChangeLog:
             referencedColumnNames: id
             referencedTableName: roles
             validate:  true
-  - changeSet:
-      id: 6
-      author: hryhorii perets
-      comment: "Some comments go here"
-      changes:
-        - insert:
-            tableName: roles
-            columns:
-              - column:
-                  name: rolename
-                  value: "ROLE_ADMIN"
-        - insert:
-            tableName: roles
-            columns:
-              - column:
-                  name: rolename
-                  value: "ROLE_USER"
-        - insert:
-            tableName: roles
-            columns:
-              - column:
-                  name: rolename
-                  value: "ROLE_MANAGER"
-        - insert:
-            tableName: roles
-            columns:
-              - column:
-                  name: rolename
-                  value: "ROLE_CUSTOMER"

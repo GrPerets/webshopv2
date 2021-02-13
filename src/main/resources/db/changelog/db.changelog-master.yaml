@@ -3,5 +3,8 @@ databaseChangeLog:
       file: db.changelog-products.yaml
       relativeToChangelogFile: true
   - include:
-      file: db.changelog-users.yaml
+      file: db.changelog-managers.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: db.changelog-customers.yaml
       relativeToChangelogFile: true

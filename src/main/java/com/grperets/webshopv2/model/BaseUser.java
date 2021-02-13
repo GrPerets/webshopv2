@@ -2,13 +2,13 @@ package com.grperets.webshopv2.model;
 
 import lombok.Data;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
 import java.util.List;
 
-@Entity
-@Table(name = "users")
+@MappedSuperclass
 @Data
-public class User extends BaseEntity{
+public abstract class BaseUser extends BaseEntity{
 
     @Column(name = "username")
     private String username;
@@ -28,10 +28,6 @@ public class User extends BaseEntity{
     @Column(name = "phone")
     private String phone;
 
+    private transient List<Role> roles;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "users_roles",
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
-    private List<Role> roles;
 }
