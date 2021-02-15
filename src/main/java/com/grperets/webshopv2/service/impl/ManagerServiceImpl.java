@@ -1,6 +1,8 @@
 package com.grperets.webshopv2.service.impl;
 
 import com.grperets.webshopv2.model.Manager;
+import com.grperets.webshopv2.model.Role;
+import com.grperets.webshopv2.model.Status;
 import com.grperets.webshopv2.repository.ManagerRepository;
 import com.grperets.webshopv2.repository.RoleRepository;
 import com.grperets.webshopv2.service.ManagerService;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -28,8 +31,8 @@ public class ManagerServiceImpl implements ManagerService {
 
 
     @Override
-    public Manager findByUsername(String username) {
-        return null;
+    public Manager findByUsername(String username){
+        return this.managerRepository.findByUsername(username);
     }
 
     @Override
@@ -39,11 +42,13 @@ public class ManagerServiceImpl implements ManagerService {
 
     @Override
     public void create(Manager manager) {
-        //Role role = roleRepository.findAll();
-       // List<Role> roles = new ArrayList<>();
-        //roles.add(role);
-        //manager.setRoles(roles);
+        Role role = this.roleRepository.findByRolename("ROLE_MANAGER");
+        List<Role> roles = new ArrayList<>();
+        roles.add(role);
+        manager.setRoles(roles);
         manager.setPassword(this.passwordEncoder.encode(manager.getPassword()));
+        manager.setStatus(Status.ACTIVE);
+        manager.setCreated(Timestamp.valueOf(LocalDateTime.now()));
         this.managerRepository.save(manager);
 
     }

@@ -5,7 +5,7 @@ import com.grperets.webshopv2.model.Role;
 import java.util.List;
 
 public interface RoleService {
-
+    Role findByRolename(String rolename);
     Role getById(Long id);
     void create(Role role);
     void update(Role role);

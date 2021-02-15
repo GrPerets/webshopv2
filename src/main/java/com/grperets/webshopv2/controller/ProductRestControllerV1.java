@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -80,10 +81,7 @@ public class ProductRestControllerV1 {
         if (products.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        List<ProductDTO> productDTOS = new ArrayList<>();
-        for (Product product: products){
-            productDTOS.add(ProductDTO.fromProduct(product));
-        }
+        List<ProductDTO> productDTOS = products.stream().map(product -> ProductDTO.fromProduct(product)).collect(Collectors.toList());
 
         return new ResponseEntity<>(productDTOS, HttpStatus.OK);
 

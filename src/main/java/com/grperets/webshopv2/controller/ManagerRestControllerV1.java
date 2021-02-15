@@ -2,27 +2,31 @@ package com.grperets.webshopv2.controller;
 
 import com.grperets.webshopv2.dto.ManagerDTO;
 import com.grperets.webshopv2.model.Manager;
-import com.grperets.webshopv2.model.Product;
+import com.grperets.webshopv2.model.Role;
 import com.grperets.webshopv2.service.ManagerService;
+import com.grperets.webshopv2.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/managers")
 public class ManagerRestControllerV1 {
 
     private final ManagerService managerService;
+    private final RoleService roleService;
 
     @Autowired
-    public ManagerRestControllerV1(ManagerService managerService) {
+    public ManagerRestControllerV1(ManagerService managerService, RoleService roleService) {
         this.managerService = managerService;
+        this.roleService = roleService;
     }
+
 
     @RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ManagerDTO> getManager(@PathVariable("id") Long id){
@@ -46,8 +50,8 @@ public class ManagerRestControllerV1 {
         return new ResponseEntity<>(managerDTO, HttpStatus.CREATED);
 
     }
-    @RequestMapping(value = "{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ManagerDTO> updateManager(@PathVariable("id") Long id, @RequestBody ManagerDTO managerDTO){
+    @RequestMapping(value = "", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ManagerDTO> updateManager(@RequestBody ManagerDTO managerDTO){
         if (managerDTO == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -75,10 +79,7 @@ public class ManagerRestControllerV1 {
         if (managers.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        List<ManagerDTO> managerDTOS = new ArrayList<>();
-        for (Manager manager: managers){
-            managerDTOS.add(ManagerDTO.fromManager(manager));
-        }
+        List<ManagerDTO> managerDTOS = managers.stream().map(manager -> ManagerDTO.fromManager(manager)).collect(Collectors.toList());
 
         return new ResponseEntity<>(managerDTOS, HttpStatus.OK);
     }

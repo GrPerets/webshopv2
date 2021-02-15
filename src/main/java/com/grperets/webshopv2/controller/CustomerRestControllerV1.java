@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/customers")
@@ -74,11 +75,8 @@ public class CustomerRestControllerV1 {
         if(customers.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        // Todo
-        List<CustomerDTO> customerDTOS = new ArrayList<>();
-        for(Customer customer: customers){
-            customerDTOS.add(CustomerDTO.fromCustomer(customer));
-        }
+        List<CustomerDTO> customerDTOS = customers.stream().map(customer -> CustomerDTO.fromCustomer(customer)).collect(Collectors.toList());
+
         return new ResponseEntity<>(customerDTOS, HttpStatus.OK);
     }
 }

@@ -2,9 +2,9 @@ package com.grperets.webshopv2.model;
 
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 import java.util.List;
+
 
 @MappedSuperclass
 @Data
@@ -29,5 +29,6 @@ public abstract class BaseUser extends BaseEntity{
     private String phone;
 
     private transient List<Role> roles;
+
 
 }

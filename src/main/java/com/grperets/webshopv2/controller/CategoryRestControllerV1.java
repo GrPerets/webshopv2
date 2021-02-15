@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/v1/categories")
@@ -76,10 +77,8 @@ public class CategoryRestControllerV1 {
         if(categories.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        List<CategoryDTO> categoryDTOS = new ArrayList<>();
-        for(Category category: categories){
-            categoryDTOS.add(CategoryDTO.fromCategory(category));
-        }
+        List<CategoryDTO> categoryDTOS = categories.stream().map(category -> CategoryDTO.fromCategory(category)).collect(Collectors.toList());
+
         return new ResponseEntity<>(categoryDTOS, HttpStatus.OK);
     }
 

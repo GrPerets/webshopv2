@@ -1,6 +1,7 @@
 package com.grperets.webshopv2.model;
 
 import lombok.Data;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.util.List;
@@ -19,4 +20,5 @@ public class Role extends BaseEntity{
 
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private List<Customer> customers;
+
 }
