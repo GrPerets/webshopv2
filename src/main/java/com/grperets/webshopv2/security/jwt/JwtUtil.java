@@ -19,17 +19,17 @@ import java.util.function.Function;
 public class JwtUtil {
 
     @Value("${jwt.token.secret}")
-    private String secret;
+    private String tokenSecret;
 
     @Value("${jwt.token.expired}")
-    private long expired;
+    private long tokenExpirationMsec;
 
     private SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
 
     @PostConstruct
     protected void init(){
-        secret = Base64.getEncoder().encodeToString(secret.getBytes());
+        tokenSecret = Base64.getEncoder().encodeToString(tokenSecret.getBytes());
     }
 
 
@@ -49,7 +49,7 @@ public class JwtUtil {
     }
 
     private Claims extractAllClaims(String token){
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+        return Jwts.parser().setSigningKey(tokenSecret).parseClaimsJws(token).getBody();
     }
 
     public String extractUsername(String token){
@@ -75,8 +75,8 @@ public class JwtUtil {
                 .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expired))
-                .signWith(signatureAlgorithm, secret)
+                .setExpiration(new Date(System.currentTimeMillis() + tokenExpirationMsec))
+                .signWith(signatureAlgorithm, tokenSecret)
                 .compact();
     }
     public String generateToken(UserDetails userDetails){

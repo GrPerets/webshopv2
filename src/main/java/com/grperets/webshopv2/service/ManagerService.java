@@ -7,9 +7,10 @@ import java.util.List;
 
 public interface ManagerService {
     Manager findByUsername(String username);
-    Manager getById(Long id);
-    void create(Manager manager);
-    void update(Manager manager);
-    void delete(Manager manager);
-    List<Manager> getAll();
+
+    Manager getManagerById(Long id);
+    boolean createManager(Manager manager);
+    boolean updateManager(Manager manager);
+    boolean deleteManager(Long id);
+    List<Manager> getAllManagers();
 }

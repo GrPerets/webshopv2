@@ -21,35 +21,50 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category getById(Long id) {
+    public Category getCategoryById(Long id) {
         return this.categoryRepository.findById(id).orElse(null);
     }
 
     @Override
-    public void create(Category category) {
+    public boolean createCategory(Category category) {
+        if (this.categoryRepository.findByCategoryname(category.categoryname) != null){
+            return false;
+        }
         category.setCreated(Timestamp.valueOf(LocalDateTime.now()));
-        this.categoryRepository.save(category);
+        if (this.categoryRepository.save(category) != null){
+            return true;
+        }
+        return false;
 
     }
 
     @Override
-    public void update(Category category){
+    public boolean updateCategory(Category category){
         Category existingСategory = this.categoryRepository.findById(category.getId()).orElse(new Category());
         //existingСategory.setId(category.getId());
         existingСategory.setCategoryname(category.getCategoryname());
         existingСategory.setUpdated(Timestamp.valueOf(LocalDateTime.now()));
-        this.categoryRepository.save(existingСategory);
+
+        if (this.categoryRepository.save(existingСategory) != null){
+            return true;
+        }
+        return false;
     }
 
 
     @Override
-    public void delete(Category category) {
-        this.categoryRepository.delete(category);
+    public boolean deleteCategory(Long id) {
+        Category category = getCategoryById(id);
+        if (category != null){
+            this.categoryRepository.delete(category);
+            return true;
+        }
+        return false;
 
     }
 
     @Override
-    public List<Category> getAll() {
+    public List<Category> getAllCategories() {
         return this.categoryRepository.findAll();
     }
 }

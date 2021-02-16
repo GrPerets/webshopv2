@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,7 +30,7 @@ public class CategoryRestControllerV1 {
         if(id == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        Category category = categoryService.getById(id);
+        Category category = categoryService.getCategoryById(id);
         if (category == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -38,42 +39,42 @@ public class CategoryRestControllerV1 {
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO categoryDTO){
+    public ResponseEntity<CategoryDTO> createCategory(@RequestBody @Valid CategoryDTO categoryDTO){
         if (categoryDTO == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        if (this.categoryService.createCategory(categoryDTO.toCategory())){
+            return new ResponseEntity<>(categoryDTO, HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
 
-        this.categoryService.create(categoryDTO.toCategory());
-        return new ResponseEntity<>(categoryDTO, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CategoryDTO> updateCategory(@RequestBody CategoryDTO categoryDTO){
+    public ResponseEntity<CategoryDTO> updateCategory(@RequestBody @Valid CategoryDTO categoryDTO){
         if(categoryDTO == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        this.categoryService.update(categoryDTO.toCategory());
-        return new ResponseEntity<>(categoryDTO, HttpStatus.OK);
+        if (this.categoryService.updateCategory(categoryDTO.toCategory())){
+            return new ResponseEntity<>(categoryDTO, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CategoryDTO> deleteCategory(@PathVariable("id") Long id ){
-        if(id == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        Category category = this.categoryService.getById(id);
-        if (category == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
 
-        this.categoryService.delete(category);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        if (this.categoryService.deleteCategory(id)){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
 
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<CategoryDTO>> getAllCategories(){
-        List<Category> categories = this.categoryService.getAll();
+        List<Category> categories = this.categoryService.getAllCategories();
         if(categories.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

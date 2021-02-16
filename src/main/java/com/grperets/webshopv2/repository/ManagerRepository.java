@@ -6,4 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ManagerRepository extends JpaRepository<Manager, Long> {
     Manager findByUsername(String username);
+    Manager findByEmail(String email);
+    Manager findByPhone(String phone);
+
 }

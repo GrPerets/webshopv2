@@ -6,6 +6,7 @@ import com.grperets.webshopv2.model.Status;
 import com.grperets.webshopv2.repository.ManagerRepository;
 import com.grperets.webshopv2.repository.RoleRepository;
 import com.grperets.webshopv2.service.ManagerService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 public class ManagerServiceImpl implements ManagerService {
 
     private final ManagerRepository managerRepository;
@@ -36,12 +38,25 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     @Override
-    public Manager getById(Long id) {
+    public Manager getManagerById(Long id) {
         return this.managerRepository.findById(id).orElse(null);
     }
 
     @Override
-    public void create(Manager manager) {
+    public boolean createManager(Manager manager) {
+        if (this.managerRepository.findByUsername(manager.getUsername()) != null){
+            //throw new ServiceException("Manager with username: " + manager.getUsername() + " is existing!");
+            return false;
+        }
+        if (this.managerRepository.findByEmail(manager.getEmail()) != null){
+            //throw new ServiceException("Manager with email: " + manager.getEmail() + " is existing!");
+            return false;
+        }
+        if (this.managerRepository.findByPhone(manager.getPhone()) != null){
+            //throw new ServiceException("Manager with phone: " + manager.getPhone() + " is existing!");
+            return false;
+        }
+
         Role role = this.roleRepository.findByRolename("ROLE_MANAGER");
         List<Role> roles = new ArrayList<>();
         roles.add(role);
@@ -49,12 +64,17 @@ public class ManagerServiceImpl implements ManagerService {
         manager.setPassword(this.passwordEncoder.encode(manager.getPassword()));
         manager.setStatus(Status.ACTIVE);
         manager.setCreated(Timestamp.valueOf(LocalDateTime.now()));
-        this.managerRepository.save(manager);
+
+        if (this.managerRepository.save(manager) != null){
+            log.info("IN createManager manager {} created", manager  );
+            return true;
+        }
+        return false;
 
     }
 
     @Override
-    public void update(Manager manager){
+    public boolean updateManager(Manager manager){
         Manager existingManager = this.managerRepository.findById(manager.getId()).orElse(new Manager());
         //existingManager.setId(manager.getId());
         existingManager.setUsername(manager.getUsername());
@@ -64,17 +84,28 @@ public class ManagerServiceImpl implements ManagerService {
         existingManager.setEmail(manager.getEmail());
         existingManager.setPhone(manager.getPhone());
         existingManager.setUpdated(Timestamp.valueOf(LocalDateTime.now()));
-        this.managerRepository.save(existingManager);
+        if (this.managerRepository.save(existingManager) != null){
+            log.info("IN updateManager manager {} updated", manager  );
+            return true;
+        }
+        return false;
+
     }
 
     @Override
-    public void delete(Manager manager) {
-        this.managerRepository.delete(manager);
+    public boolean deleteManager(Long id) {
+        Manager manager = getManagerById(id);
+        if (manager != null){
+            this.managerRepository.delete(manager);
+            log.info("IN deleteManager manager {} deleted", manager  );
+            return true;
+        }
+        return false;
 
     }
 
     @Override
-    public List<Manager> getAll() {
+    public List<Manager> getAllManagers() {
         return this.managerRepository.findAll();
     }
 }

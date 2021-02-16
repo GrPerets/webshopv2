@@ -24,7 +24,7 @@ databaseChangeLog:
                   name: first_name
                   type: varchar(50)
                   constraints:
-                    unique: fals
+                    unique: false
                     nullable: false
               - column:
                   name: last_name

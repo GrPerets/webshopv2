@@ -24,39 +24,52 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public Product getById(Long id) {
+    public Product getProductById(Long id) {
         return this.productRepository.findById(id).orElse(null);
     }
 
     @Override
-    public void create(Product product) {
+    public boolean createProduct(Product product) {
+        if (this.productRepository.findByProductname(product.getProductname()) != null){
+            return false;
+        }
         product.setStatus(Status.NOT_AVAILABLE);
         product.setCreated(Timestamp.valueOf(LocalDateTime.now()));
 
-        this.productRepository.save(product);
+        if (this.productRepository.save(product) != null){
+            return true;
+        }
+        return false;
 
     }
 
     @Override
-    public void update(Product product){
+    public boolean updateProduct(Product product){
         Product existingProduct = this.productRepository.findById(product.getId()).orElse(new Product());
         //existingProduct.setId(product.getId());
         existingProduct.setProductname(product.getProductname());
         existingProduct.setCategory(product.getCategory());
         existingProduct.setPrice(product.getPrice());
         existingProduct.setUpdated(Timestamp.valueOf(LocalDateTime.now()));
-        this.productRepository.save(existingProduct);
 
+        if (this.productRepository.save(existingProduct) != null){
+            return true;
+        }
+        return false;
     }
 
     @Override
-    public void delete(Product product) {
-        this.productRepository.delete(product);
-
+    public boolean deleteProduct(Long id) {
+        Product product = getProductById(id);
+        if (product != null){
+            this.productRepository.delete(product);
+            return true;
+        }
+        return false;
     }
 
     @Override
-    public List<Product> getAll() {
+    public List<Product> getAllProducts() {
         return this.productRepository.findAll();
     }
 }

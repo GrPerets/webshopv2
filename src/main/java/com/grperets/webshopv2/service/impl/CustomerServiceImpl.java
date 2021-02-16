@@ -36,12 +36,21 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer getById(Long id) {
+    public Customer getCustomerById(Long id) {
         return this.customerRepository.findById(id).orElse(null);
     }
 
     @Override
-    public void create(Customer customer) {
+    public boolean createCustomer(Customer customer) {
+        if (this.customerRepository.findByUsername(customer.getUsername()) != null){
+            return false;
+        }
+        if (this.customerRepository.findByEmail(customer.getEmail()) != null){
+            return false;
+        }
+        if (this.customerRepository.findByPhone(customer.getPhone()) != null){
+            return false;
+        }
         Role role = this.roleRepository.findByRolename("ROLE_CUSTOMER");
         List<Role> roles = new ArrayList<>();
         roles.add(role);
@@ -49,12 +58,15 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setStatus(Status.ACTIVE);
         customer.setPassword(this.passwordEncoder.encode(customer.getPassword()));
         customer.setCreated(Timestamp.valueOf(LocalDateTime.now()));
-        this.customerRepository.save(customer);
+        if (this.customerRepository.save(customer) != null){
+            return true;
+        };
+        return false;
 
     }
 
     @Override
-    public void update(Customer customer){
+    public boolean updateCustomer(Customer customer){
         Customer existingCustomer = this.customerRepository.findById(customer.getId()).orElse(new Customer());
         //existingCustomer.setId(customer.getId());
         existingCustomer.setUsername(customer.getUsername());
@@ -64,18 +76,26 @@ public class CustomerServiceImpl implements CustomerService {
         existingCustomer.setEmail(customer.getEmail());
         existingCustomer.setPhone(customer.getPhone());
         existingCustomer.setUpdated(Timestamp.valueOf(LocalDateTime.now()));
-        this.customerRepository.save(existingCustomer);
+        if (this.customerRepository.save(existingCustomer) != null){
+            return true;
+        }
+        return false;
     }
 
 
     @Override
-    public void delete(Customer customer) {
-        this.customerRepository.delete(customer);
+    public boolean deleteCustomer(Long id) {
+        Customer customer = getCustomerById(id);
+        if (customer != null) {
+            this.customerRepository.delete(customer);
+            return true;
+        }
+        return false;
 
     }
 
     @Override
-    public List<Customer> getAll() {
+    public List<Customer> getAllCustomers() {
         return this.customerRepository.findAll();
     }
 }

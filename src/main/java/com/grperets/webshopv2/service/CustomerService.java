@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface CustomerService {
     Customer findByUsername(String username);
-    Customer getById(Long id);
-    void create(Customer customer);
-    void update(Customer customer);
-    void delete(Customer customer);
-    List<Customer> getAll();
+    Customer getCustomerById(Long id);
+    boolean createCustomer(Customer customer);
+    boolean updateCustomer(Customer customer);
+    boolean deleteCustomer(Long id);
+    List<Customer> getAllCustomers();
 }

@@ -25,29 +25,41 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Role getById(Long id) {
+    public Role getRoleById(Long id) {
         return this.roleRepository.findById(id).orElse(null);
     }
 
     @Override
-    public void create(Role role) {
-        this.roleRepository.save(role);
+    public boolean createRole(Role role) {
+        if (this.roleRepository.save(role) != null){
+            return true;
+        }
+        return false;
 
     }
 
     @Override
-    public void update(Role role){
-        this.roleRepository.save(role);
+    public boolean updateRole(Role role){
+        if (this.roleRepository.save(role) != null){
+            return true;
+        }
+        return false;
     }
 
     @Override
-    public void delete(Role role) {
-        roleRepository.delete(role);
+    public boolean deleteRole(Long id) {
+        Role role = getRoleById(id);
+        if (role != null){
+            this.roleRepository.delete(role);
+            return true;
+        }
+
+        return false;
 
     }
 
     @Override
-    public List<Role> getAll() {
-        return roleRepository.findAll();
+    public List<Role> getAllRoles() {
+        return this.roleRepository.findAll();
     }
 }

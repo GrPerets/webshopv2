@@ -29,7 +29,7 @@ public class ProductRestControllerV1 {
         if (id == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        Product product = this.productService.getById(id);
+        Product product = this.productService.getProductById(id);
         if (product == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -45,9 +45,12 @@ public class ProductRestControllerV1 {
         }
         Product product = productDTO.toProduct();
 
-        this.productService.create(product);
+        if (this.productService.createProduct(product)){
+            return new ResponseEntity<>(productDTO, HttpStatus.CREATED);
+        }
 
-        return new ResponseEntity<>(productDTO, HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+
 
     }
 
@@ -57,27 +60,28 @@ public class ProductRestControllerV1 {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         Product product = productDTO.toProduct();
-        this.productService.update(product);
-        return new ResponseEntity<>(productDTO, HttpStatus.OK);
+        if (this.productService.updateProduct(product)){
+            return new ResponseEntity<>(productDTO, HttpStatus.OK);
+        }
 
+        return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
 
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ProductDTO> deleteProduct(@PathVariable("id") Long id){
-        Product product = this.productService.getById(id);
-        if (product == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        if (this.productService.deleteProduct(id)){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        this.productService.delete(product);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ProductDTO>> getAllProducts(){
 
-        List<Product> products = this.productService.getAll();
+        List<Product> products = this.productService.getAllProducts();
         if (products.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,7 +29,7 @@ public class CustomerRestControllerV1 {
         if(id == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        Customer customer = this.customerService.getById(id);
+        Customer customer = this.customerService.getCustomerById(id);
         if(customer == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -37,41 +38,43 @@ public class CustomerRestControllerV1 {
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CustomerDTO> createCustomer(@RequestBody CustomerDTO customerDTO){
+    public ResponseEntity<CustomerDTO> createCustomer(@RequestBody @Valid CustomerDTO customerDTO){
         if( customerDTO == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         Customer customer = customerDTO.toCustomer();
-        this.customerService.create(customer);
-        return new ResponseEntity<>(customerDTO, HttpStatus.CREATED);
+        if (this.customerService.createCustomer(customer)){
+            return new ResponseEntity<>(customerDTO, HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+
     }
 
     @RequestMapping(value = "", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CustomerDTO> updateCustomer(@RequestBody CustomerDTO customerDTO){
+    public ResponseEntity<CustomerDTO> updateCustomer(@RequestBody @Valid CustomerDTO customerDTO){
         if (customerDTO == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         Customer customer = customerDTO.toCustomer();
-        this.customerService.update(customer);
-        return new ResponseEntity<>(customerDTO, HttpStatus.OK);
+        if (this.customerService.updateCustomer(customer)){
+            return new ResponseEntity<>(customerDTO, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CustomerDTO> deleteCustomer(@PathVariable("id") Long id){
-        if( id == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (this.customerService.deleteCustomer(id)){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        Customer customer = this.customerService.getById(id);
-        if(customer == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        this.customerService.delete(customer);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<CustomerDTO>> allCustomers(){
-        List<Customer> customers = this.customerService.getAll();
+        List<Customer> customers = this.customerService.getAllCustomers();
         if(customers.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

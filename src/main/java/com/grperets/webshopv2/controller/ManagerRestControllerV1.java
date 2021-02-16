@@ -1,6 +1,7 @@
 package com.grperets.webshopv2.controller;
 
 import com.grperets.webshopv2.dto.ManagerDTO;
+import com.grperets.webshopv2.exception.ServiceException;
 import com.grperets.webshopv2.model.Manager;
 import com.grperets.webshopv2.model.Role;
 import com.grperets.webshopv2.service.ManagerService;
@@ -11,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,7 +35,7 @@ public class ManagerRestControllerV1 {
         if(id == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        Manager manager = managerService.getById(id);
+        Manager manager = managerService.getManagerById(id);
         if (manager == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -42,39 +44,39 @@ public class ManagerRestControllerV1 {
                 ResponseEntity<>(managerDTO, HttpStatus.OK);
     }
     @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ManagerDTO> createManager(@RequestBody ManagerDTO managerDTO){
+    public ResponseEntity<ManagerDTO> createManager(@RequestBody @Valid ManagerDTO managerDTO){
         if(managerDTO == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        this.managerService.create(managerDTO.toManager());
-        return new ResponseEntity<>(managerDTO, HttpStatus.CREATED);
+        if (this.managerService.createManager(managerDTO.toManager())){
+            return new ResponseEntity<>(managerDTO, HttpStatus.CREATED);
+        }
 
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
     @RequestMapping(value = "", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ManagerDTO> updateManager(@RequestBody ManagerDTO managerDTO){
+    public ResponseEntity<ManagerDTO> updateManager(@RequestBody @Valid ManagerDTO managerDTO){
         if (managerDTO == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        this.managerService.update(managerDTO.toManager());
-        return new ResponseEntity<>(managerDTO, HttpStatus.OK);
+        if (this.managerService.updateManager(managerDTO.toManager())){
+            return new ResponseEntity<>(managerDTO, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
 
     }
     @RequestMapping(value = ("{id}"), method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Manager> deleteManager(@PathVariable("id") Long id){
-        if(id == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (this.managerService.deleteManager(id)){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        Manager manager = this.managerService.getById(id);
-        if (manager == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        this.managerService.delete(manager);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ManagerDTO>> getAllManagers(){
-        List<Manager> managers = this.managerService.getAll();
+        List<Manager> managers = this.managerService.getAllManagers();
 
         if (managers.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
