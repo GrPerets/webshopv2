@@ -1,9 +1,7 @@
 package com.grperets.webshopv2.controller;
 
 import com.grperets.webshopv2.dto.ManagerDTO;
-import com.grperets.webshopv2.exception.ServiceException;
 import com.grperets.webshopv2.model.Manager;
-import com.grperets.webshopv2.model.Role;
 import com.grperets.webshopv2.service.ManagerService;
 import com.grperets.webshopv2.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;

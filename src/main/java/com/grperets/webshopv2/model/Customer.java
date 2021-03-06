@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 
 @Entity
@@ -17,4 +18,17 @@ public class Customer extends BaseUser {
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     private List<Role> roles;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Customer)) return false;
+        if (!super.equals(o)) return false;
+        Customer customer = (Customer) o;
+        return getRoles().equals(customer.getRoles());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getRoles());
+    }
 }

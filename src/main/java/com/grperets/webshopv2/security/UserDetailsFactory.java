@@ -6,17 +6,16 @@ import com.grperets.webshopv2.model.Status;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public final class AuthUserDetailsFactory {
+public final class UserDetailsFactory {
 
-    public AuthUserDetailsFactory() {
+    public UserDetailsFactory() {
     }
 
-    public static AuthUserDetails create(BaseUser baseUser){
-        return new AuthUserDetails(
+    public static UserDetailsImpl create(BaseUser baseUser){
+        return new UserDetailsImpl(
                 baseUser.getId(),
                 baseUser.getUsername(),
                 baseUser.getFirstName(),

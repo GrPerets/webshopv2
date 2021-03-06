@@ -12,6 +12,7 @@ import java.util.List;
 @Data
 public abstract class BaseUser extends BaseEntity{
 
+
     @Column(name = "username")
     @NotNull
     private String username;

@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.Collection;
 
 @Data
-public class AuthUserDetails implements UserDetails {
+public class UserDetailsImpl implements UserDetails {
 
     private  final Long id;
     private  final String username;
@@ -23,7 +23,7 @@ public class AuthUserDetails implements UserDetails {
     private  final Collection<? extends GrantedAuthority> authorities;
 
 
-    public AuthUserDetails(
+    public UserDetailsImpl(
                             Long id,
                             String username,
                             String firstName,

@@ -15,12 +15,12 @@ import java.io.IOException;
 
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
-    private final JwtUtil jwtUtil;
+    private final JwtProvider jwtProvider;
     private final UserDetailsService userDetailsService;
 
 
-    public JwtAuthorizationFilter(JwtUtil jwtUtil, UserDetailsService userDetailsService) {
-        this.jwtUtil = jwtUtil;
+    public JwtAuthorizationFilter(JwtProvider jwtProvider, UserDetailsService userDetailsService) {
+        this.jwtProvider = jwtProvider;
         this.userDetailsService = userDetailsService;
     }
 
@@ -28,17 +28,17 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
         String username = null;
-        String token = this.jwtUtil.resolveToken(httpServletRequest);
+        String token = this.jwtProvider.resolveToken(httpServletRequest);
 
 
         if (token != null) {
-            username = this.jwtUtil.extractUsername(token);
+            username = this.jwtProvider.extractUsername(token);
         }
         //
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
-            if (this.jwtUtil.validateToken(token, userDetails)){
+            if (this.jwtProvider.validateToken(token, userDetails)){
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);

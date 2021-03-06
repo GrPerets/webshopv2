@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 @Entity
 @Table(name = "products")
@@ -21,5 +22,17 @@ public class Product extends BaseEntity {
     private BigDecimal price;
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Product)) return false;
+        if (!super.equals(o)) return false;
+        Product product = (Product) o;
+        return getProductname().equals(product.getProductname()) && getCategory().equals(product.getCategory()) && getPrice().equals(product.getPrice());
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getProductname(), getCategory(), getPrice());
+    }
 }

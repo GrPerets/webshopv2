@@ -2,7 +2,7 @@ package com.grperets.webshopv2.config;
 
 
 import com.grperets.webshopv2.security.jwt.JwtConfigurer;
-import com.grperets.webshopv2.security.jwt.JwtUtil;
+import com.grperets.webshopv2.security.jwt.JwtProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -10,17 +10,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.firewall.HttpFirewall;
 import org.springframework.security.web.firewall.HttpStatusRequestRejectedHandler;
 import org.springframework.security.web.firewall.RequestRejectedHandler;
-import org.springframework.security.web.firewall.StrictHttpFirewall;
 
 @Configuration
 @EnableWebSecurity
@@ -31,12 +27,12 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     private static final String MANAGER_ENDPOINT = "/api/v1/managers/**";
 
 
-    private final JwtUtil jwtUtil;
+    private final JwtProvider jwtProvider;
     private final UserDetailsService userDetailsService;
 
     @Autowired
-    public SecurityConfigurer(JwtUtil jwtUtil, @Qualifier("authUserDetailsServiceImpl") UserDetailsService userDetailsService) {
-        this.jwtUtil = jwtUtil;
+    public SecurityConfigurer(JwtProvider jwtProvider, @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService) {
+        this.jwtProvider = jwtProvider;
         this.userDetailsService = userDetailsService;
     }
 
@@ -105,7 +101,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .anyRequest()
                 .authenticated()
                 .and()
-                .apply(new JwtConfigurer(jwtUtil, userDetailsService))
+                .apply(new JwtConfigurer(jwtProvider, userDetailsService))
 
         ;
     }

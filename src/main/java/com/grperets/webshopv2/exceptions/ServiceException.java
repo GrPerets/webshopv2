@@ -1,4 +1,4 @@
-package com.grperets.webshopv2.exception;
+package com.grperets.webshopv2.exceptions;
 
 public class ServiceException extends RuntimeException{
     public ServiceException(String message) {
